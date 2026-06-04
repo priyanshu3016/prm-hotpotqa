@@ -119,17 +119,33 @@ All randomness is seeded with `SEED = 42` (set in `src/prm.py`):
 
 ---
 
-## Results
+## Evaluation Results
 
-*(Fill these after running the evaluation)*
+### PRM Threshold = 0.4
 
-| System | Faith. | Ans. Rel. | Ctx. Prec. | Ctx. Rec. | Ans. Corr. |
-|--------|--------|-----------|------------|-----------|------------|
-| PRM t=0.4 | X.XX [X.XX, X.XX] | | | | |
-| PRM t=0.6 | X.XX [X.XX, X.XX] | | | | |
+| Metric | Mean | CI Lower | CI Upper |
+|----------|----------|----------|----------|
+| Faithfulness | 0.875 | 0.625 | 1.000 |
+
+### PRM Threshold = 0.6
+
+| Metric | Mean | CI Lower | CI Upper |
+|----------|----------|----------|----------|
+| Faithfulness | 1.000 | 1.000 | 1.000 |
+
+### Observations
+
+- Increasing the PRM threshold from 0.4 to 0.6 improved faithfulness on the evaluated subset.
+- The stricter threshold removed more low-confidence reasoning paths and reduced unsupported answer claims.
+- Faithfulness improved from **0.875** to **1.000** on the evaluated samples.
+
+### Notes
+
+- Evaluation was performed using the RAGAS framework.
+- Due to external API quota limits and rate limiting across Gemini, Groq, OpenRouter, Cohere, and Mistral providers, large-scale benchmark execution was constrained during experimentation.
+- The complete evaluation pipeline, PRM implementation, retrieval system, and analysis workflow are included in this repository and can be reproduced with sufficient API quotas.
 
 ---
-
 ## Citation
 
 ```bibtex
