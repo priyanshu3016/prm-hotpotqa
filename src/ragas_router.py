@@ -13,14 +13,6 @@ from langchain_openai import ChatOpenAI
 PROVIDERS = [
 
     LangchainLLMWrapper(
-        ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
-            google_api_key=os.getenv("GEMINI_API_KEY"),
-            temperature=0,
-        )
-    ),
-
-    LangchainLLMWrapper(
         ChatGroq(
             model_name="llama-3.3-70b-versatile",
             api_key=os.getenv("GROQ_API_KEY"),

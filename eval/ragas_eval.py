@@ -30,6 +30,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
+from langchain_community.chat_models import ChatOpenAI
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -78,7 +79,7 @@ CHECKPOINT_EVERY = 25
 PIPELINE_TIMEOUT_WARN = 0  # kept for clarity; no hard timeout in this script
 
 # RAGAS judge rotation order.
-PROVIDERS = ("gemini", "groq", "cohere", "mistral")
+PROVIDERS = ("groq", "openrouter")
 PROVIDER_MAX_RETRIES = 3
 RETRY_BASE = 2.0
 
@@ -166,49 +167,21 @@ def _build_langchain_model(provider: str):
     """Create the LangChain chat model for a specific provider."""
     provider = provider.lower().strip()
 
-    if provider == "gemini":
-        return ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
-            google_api_key=os.getenv("GEMINI_API_KEY"),
-            temperature=0,
-        )
-
     if provider == "groq":
         return ChatGroq(
-            model="llama-3.3-70b-versatile",
-            groq_api_key=os.getenv("GROQ_API_KEY"),
-            temperature=0,
-        )
+        model_name="llama-3.3-70b-versatile",
+        api_key=os.getenv("GROQ_API_KEY"),
+        temperature=0,
+    )
 
-    if provider == "cohere":
-        try:
-            from langchain_cohere import ChatCohere
-        except ImportError as e:
-            raise ImportError(
-                "langchain-cohere is required for Cohere support. "
-                "Install it and add COHERE_API_KEY to your .env."
-            ) from e
-
-        return ChatCohere(
-            model="command-r-plus",
-            cohere_api_key=os.getenv("COHERE_API_KEY"),
-            temperature=0,
-        )
-
-    if provider == "mistral":
-        try:
-            from langchain_mistralai import ChatMistralAI
-        except ImportError as e:
-            raise ImportError(
-                "langchain-mistralai is required for Mistral support. "
-                "Install it and add MISTRAL_API_KEY to your .env."
-            ) from e
-
-        return ChatMistralAI(
-            model="mistral-large-latest",
-            mistral_api_key=os.getenv("MISTRAL_API_KEY"),
-            temperature=0,
-        )
+    elif provider == "openrouter":
+        return ChatOpenAI(
+        model="qwen/qwen3-32b",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+        temperature=0,
+    )
+    
 
     raise ValueError(f"Unknown provider: {provider}")
 
@@ -403,7 +376,7 @@ _emb = LangchainEmbeddingsWrapper(
 
 # Attach the shared rotating judge LLM to every metric.
 # The same object is reused so rotation happens globally across all calls.
-faithfulness.llm = PROVIDERS[2]
+faithfulness.llm = get_ragas_llm()
 faithfulness.embeddings = _emb
 
 answer_relevancy.llm = get_ragas_llm()

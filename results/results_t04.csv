@@ -1,0 +1,2 @@
+system,metric,mean,ci_lo,ci_hi
+PRM t=0.4,faithfulness,0.875,0.625,1.0
