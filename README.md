@@ -146,13 +146,4 @@ All randomness is seeded with `SEED = 42` (set in `src/prm.py`):
 - The complete evaluation pipeline, PRM implementation, retrieval system, and analysis workflow are included in this repository and can be reproduced with sufficient API quotas.
 
 ---
-## Citation
 
-```bibtex
-@inproceedings{yang2018hotpotqa,
-  title     = {HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering},
-  author    = {Yang, Zhilin and others},
-  booktitle = {EMNLP},
-  year      = {2018}
-}
-```
